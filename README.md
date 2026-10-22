@@ -1,6 +1,6 @@
 # Akapulu Labs agent plugins
 
-Public skills for coding agents building on [Akapulu Labs](https://akapulu.com) (live avatar video calls).
+Public skills for coding agents building on [Akapulu Labs](https://akapulu.com).
 
 ## For humans
 
@@ -10,8 +10,8 @@ Paste this into Cursor, Claude Code, or Codex:
 Set up Akapulu Labs for me: fetch https://docs.akapulu.com/agent-setup.md and follow it.
 ```
 
-That file explains what Akapulu is, the recommended Pipecat plugin (`pipecat-akapulu`), hosted links for a quick try, then installs the `akapulu` skill and the [docs MCP](https://docs.akapulu.com/mcp).
+That installs the `akapulu` skill and the [docs MCP](https://docs.akapulu.com/mcp), then walks API key + a first call (hosted link or the Pipecat example).
 
 ## For agents
 
-`agent-setup.md` is the installer (keep it aligned with `docs/agent-setup.mdx` in the docs repo). Skills live under `skills/`.
+Keep `agent-setup.md` aligned with `docs/agent-setup.mdx`. Skills live under `skills/`.
