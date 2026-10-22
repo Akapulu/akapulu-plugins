@@ -10,7 +10,7 @@ Paste this into Cursor, Claude Code, or Codex:
 Set up Akapulu Labs for me: fetch https://docs.akapulu.com/agent-setup.md and follow it.
 ```
 
-That installs the `akapulu` skill and the [docs MCP](https://docs.akapulu.com/mcp), then walks API key + a first call (hosted link or the Pipecat example).
+That file situates Akapulu (voice pipeline + avatar via Daily, or hosted links), then installs the `akapulu` skill and the [docs MCP](https://docs.akapulu.com/mcp).
 
 ## For agents
 
