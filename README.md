@@ -10,7 +10,7 @@ Paste this into Cursor, Claude Code, or Codex:
 Set up Akapulu Labs for me: fetch https://docs.akapulu.com/agent-setup.md and follow it.
 ```
 
-That file explains Akapulu Labs, installs the `akapulu` skill and the docs MCP, then asks which try path: agent-made hosted link, browser onboarding, or a Pipecat bot.
+That file checks for an account, then asks quick hosted-link try vs build a Pipecat avatar chat, with nested asks for API link vs UI and OpenAI Live vs custom voice pipeline.
 
 ## For agents
 
