@@ -20,7 +20,7 @@ Full docs: https://docs.akapulu.com
 ### Claude Code
 
 ```bash
-npx -y skills add william-akapulu/akapulu-plugins --skill '*' --yes --global
+npx -y skills add Akapulu/akapulu-plugins --skill '*' --yes --global
 ```
 
 ```bash
@@ -32,7 +32,7 @@ claude mcp add --transport http akapulu-docs -s user https://docs.akapulu.com/mc
 ### Codex
 
 ```bash
-npx -y skills add william-akapulu/akapulu-plugins --skill '*' --yes --global
+npx -y skills add Akapulu/akapulu-plugins --skill '*' --yes --global
 ```
 
 ```bash
@@ -44,7 +44,7 @@ codex mcp add akapulu-docs --url https://docs.akapulu.com/mcp
 ### Cursor and other agents
 
 ```bash
-npx -y skills add william-akapulu/akapulu-plugins --skill '*' --yes --global
+npx -y skills add Akapulu/akapulu-plugins --skill '*' --yes --global
 ```
 
 Add the docs MCP to `~/.cursor/mcp.json` (or this project's `.cursor/mcp.json`). Merge into `mcpServers` if the file already exists:
