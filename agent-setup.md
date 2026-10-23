@@ -194,10 +194,7 @@ The public example ([akapulu-examples](https://github.com/Akapulu/akapulu-exampl
 
 Wait until those env vars are set.
 
-Then clone https://github.com/Akapulu/akapulu-examples and follow its README. For the example avatar, use Clara:
-
-- `AKAPULU_AVATAR_ID=1f777f64-3758-4a7d-9cbc-c64ae654f7d1`
-- `AKAPULU_SHOW_AI_LABEL=false` (unless they ask otherwise)
+Then clone https://github.com/Akapulu/akapulu-examples and follow its README. The example already uses Clara, leaves **This is AI** off, and calls the Akapulu Labs production API. They only set `DAILY_API_KEY`, `AKAPULU_API_KEY`, and `OPENAI_API_KEY`.
 
 Run the server, open the local page, start a call. That is their starter app.
 
