@@ -178,23 +178,23 @@ If they already have a voice bot: keep their pipeline; add Daily room ownership 
 
 Install: `uv add pipecat-akapulu` or `pip install pipecat-akapulu`. The public example already depends on it.
 
-### Path 2 ask: OpenAI Live, or their own voice bot?
+### Path 2 ask: the public example, or their own voice bot?
 
-> **User step.** Ask: are you okay using **OpenAI Live** (Realtime) as the voice-to-voice model behind the scenes in the public example?
+> **User step.** Ask: are you okay using the public example? Behind the scenes it runs **Deepgram Flux**, **OpenAI** (`gpt-5.4-mini`), and **Cartesia Sonic 3.6**.
 
-#### Path 2a: Yes — use the example (OpenAI Live)
+#### Path 2a: Yes — use the example
 
-The public example ([akapulu-examples](https://github.com/Akapulu/akapulu-examples)) is a local server, a browser page, and a **voice bot** that uses **OpenAI Live** (`gpt-live-1`) as the voice-to-voice model (with a Responses backend). It creates the Daily room, calls live-sessions (starts the **Akapulu Labs worker**), and runs **`AkapuluAvatar`** inside that voice bot.
+The public example ([akapulu-examples](https://github.com/Akapulu/akapulu-examples)) is a local server, a browser page, and a **voice bot**. Deepgram Flux (`flux-general-multi`) hears the caller. OpenAI `gpt-5.4-mini` speaks, with reasoning off. Cartesia Sonic 3.6 speaks each finished sentence. It creates the Daily room, calls live-sessions (starts the **Akapulu Labs worker**), and runs **`AkapuluAvatar`** inside that voice bot.
 
 > **User step.**
 
 - Create an Akapulu API key at https://akapulu.com/api-keys/ if they do not have one. Instruct them to activate `AKAPULU_API_KEY` in this environment (do not paste the key into chat).
 - They also need a Daily API key as `DAILY_API_KEY`.
-- If `OPENAI_API_KEY` is not already in this environment, instruct them to activate it here.
+- They also need `OPENAI_API_KEY`, `DEEPGRAM_API_KEY`, and `CARTESIA_API_KEY`. If one of those is not already in this environment, instruct them to activate it here.
 
 Wait until those env vars are set.
 
-Then clone https://github.com/Akapulu/akapulu-examples and follow its README. The example already uses Clara, leaves **This is AI** off, and calls the Akapulu Labs production API. They only set `DAILY_API_KEY`, `AKAPULU_API_KEY`, and `OPENAI_API_KEY`.
+Then clone https://github.com/Akapulu/akapulu-examples and follow its README. The example already uses Clara, leaves **This is AI** off, and calls the Akapulu Labs production API. They set `DAILY_API_KEY`, `AKAPULU_API_KEY`, `OPENAI_API_KEY`, `DEEPGRAM_API_KEY`, and `CARTESIA_API_KEY`.
 
 Run the server, open the local page, start a call. That is their starter app.
 

@@ -10,7 +10,7 @@ Paste this into Cursor, Claude Code, or Codex:
 Set up Akapulu Labs for me: fetch https://docs.akapulu.com/agent-setup.md and follow it.
 ```
 
-That file checks for an account, then asks quick hosted-link try vs build a Pipecat avatar chat, with nested asks for API link vs UI and OpenAI Live vs custom voice pipeline.
+That file checks for an account, then asks quick hosted-link try vs build a Pipecat avatar chat, with nested asks for API link vs UI and the public example vs their own voice pipeline.
 
 ## For agents
 
