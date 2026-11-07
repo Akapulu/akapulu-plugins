@@ -94,7 +94,7 @@ A **hosted link** is a public page Akapulu Labs hosts. You create the row; they 
 
 **Defaults for this path (do not ask):**
 
-- Avatar: **Clara** — `avatar_id` `1f777f64-3758-4a7d-9cbc-c64ae654f7d1`
+- Avatar: **Hollis** — `avatar_id` `1285bfe4-3512-4b34-93ad-196098597a1c`
 - **This is AI** (`show_ai_label`): `false`
 
 > **User step.** Guide them to create an API key at https://akapulu.com/api-keys/. Then instruct them to activate `AKAPULU_API_KEY` in **this** environment (however this project already loads env vars). Do **not** ask them to paste the key into chat.
@@ -113,8 +113,8 @@ Then `POST /api/hosted-links/` with Bearer auth and a JSON body that is exactly:
 
 ```json
 {
-  "label": "Clara",
-  "avatar_id": "1f777f64-3758-4a7d-9cbc-c64ae654f7d1",
+  "label": "Hollis",
+  "avatar_id": "1285bfe4-3512-4b34-93ad-196098597a1c",
   "system_prompt": "<your TTS-friendly prompt>",
   "show_ai_label": false
 }
@@ -194,7 +194,7 @@ The public example ([akapulu-examples](https://github.com/Akapulu/akapulu-exampl
 
 Wait until those env vars are set.
 
-Then clone https://github.com/Akapulu/akapulu-examples and follow its README. The example already uses Clara, leaves **This is AI** off, and calls the Akapulu Labs production API. They set `DAILY_API_KEY`, `AKAPULU_API_KEY`, `OPENAI_API_KEY`, `DEEPGRAM_API_KEY`, and `CARTESIA_API_KEY`.
+Then clone https://github.com/Akapulu/akapulu-examples and follow its README. The example already uses Hollis, leaves **This is AI** off, and calls the Akapulu Labs production API. They set `DAILY_API_KEY`, `AKAPULU_API_KEY`, `OPENAI_API_KEY`, `DEEPGRAM_API_KEY`, and `CARTESIA_API_KEY`.
 
 Run the server, open the local page, start a call. That is their starter app.
 
@@ -218,7 +218,7 @@ They **own** the Daily room on this path. Akapulu Labs does not create it for th
 
 1. **Their server creates a Daily room** and mints three meeting tokens (browser, voice bot, Akapulu Labs worker).
 2. **Their server calls** `POST /api/live-sessions/` with Bearer `AKAPULU_API_KEY` and JSON:
-   - `avatar_id` (use Clara `1f777f64-3758-4a7d-9cbc-c64ae654f7d1` unless they pick another from https://akapulu.com/catalog)
+   - `avatar_id` (use Hollis `1285bfe4-3512-4b34-93ad-196098597a1c` unless they pick another from https://akapulu.com/catalog)
    - `show_ai_label` (boolean)
    - `room_url` (the Daily room they just created)
    - `avatar_token` (the meeting token for the **Akapulu Labs worker**)
