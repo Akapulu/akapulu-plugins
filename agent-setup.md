@@ -155,7 +155,7 @@ Before wiring code, situate **Daily**, the **voice bot**, the **Akapulu Labs wor
 
 [Daily](https://www.daily.co/) is the WebRTC room. On this path **they** create that room. `create_akapulu_call` reads `DAILY_API_KEY` and `AKAPULU_API_KEY`, creates the private Daily room, mints the three meeting tokens, and `POST /api/live-sessions/`. Put **`AkapuluAvatar`** after assistant audio with `session_id`. Leave voice-bot audio out and video out off. When the participant named **Avatar** joins, unsubscribe the voice bot from that microphone. The browser stays subscribed. Code: [Pipecat](/guides/calls/pipecat).
 
-Install: `uv add pipecat-akapulu==0.1.16` or `pip install pipecat-akapulu==0.1.16`.
+Install: `uv add pipecat-akapulu==0.1.17` or `pip install pipecat-akapulu==0.1.17`.
 
 > **User step.** Ask: are you okay using the public example? Behind the scenes it runs **Deepgram Flux**, **OpenAI** (`gpt-5.4-mini`), and **Cartesia Sonic 3.6**.
 
@@ -187,7 +187,7 @@ Before wiring code, situate **LiveKit**, the **voice agent**, the **Akapulu Labs
 
 [LiveKit](https://livekit.io/) is the WebRTC room. On this path **they** create that room. `create_akapulu_livekit_call` reads `LIVEKIT_URL`, `LIVEKIT_API_KEY`, `LIVEKIT_API_SECRET`, and `AKAPULU_API_KEY`, creates the room, mints browser and agent tokens, mints the Avatar JWT, and `POST /api/live-sessions/` with `transport=livekit`. Or call `AvatarSession.start` when the agent is already in the room so the plugin mints and POSTs. Await `wait_until_call_ready`. Mute `session.input` until then. Loading status is on LiveKit data topic `akapulu.avatar.status`. Code: [LiveKit](/guides/calls/livekit).
 
-Install: `uv add livekit-akapulu==0.1.0` or `pip install livekit-akapulu==0.1.0`. Requires `livekit-agents` 1.8 or newer.
+Install: `uv add livekit-akapulu==0.1.1` or `pip install livekit-akapulu==0.1.1`. Requires `livekit-agents` 1.8 or newer.
 
 > **User step.** Activate `AKAPULU_API_KEY`, `LIVEKIT_URL`, `LIVEKIT_API_KEY`, and `LIVEKIT_API_SECRET` in this environment. Do not paste secrets into chat. Also set `AKAPULU_API_URL` and `AKAPULU_AVATAR_ID` when `AvatarSession.start` opens the session itself.
 
