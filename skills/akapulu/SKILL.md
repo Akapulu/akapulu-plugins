@@ -12,7 +12,9 @@ license: Apache-2.0
 
 Akapulu Labs builds live AI avatars on real-time calls. Your Pipecat voice bot plus our avatar on top, or a **hosted link** with no bot. Docs: https://docs.akapulu.com. Installer: https://docs.akapulu.com/agent-setup.md. Pricing: https://akapulu.com/pricing/.
 
-**Pipecat path.** Install public package [`pipecat-akapulu`](https://github.com/Akapulu/pipecat-akapulu) (`uv add` / `pip install`). `AkapuluAvatar` sits after assistant audio. You own the Daily room (browser + bot + avatar). Guide: https://docs.akapulu.com/guides/calls/your-bot. Example: https://github.com/Akapulu/akapulu-examples.
+**Pipecat path.** Install public package [`pipecat-akapulu`](https://github.com/Akapulu/pipecat-akapulu) (`uv add` / `pip install`). `AkapuluAvatar` sits after assistant audio. You own the Daily room (browser + bot + avatar). Guides: https://docs.akapulu.com/guides/calls/pipecat and https://docs.akapulu.com/guides/calls/livekit. Example: https://github.com/Akapulu/akapulu-examples.
+
+**LiveKit path.** Install public package [`livekit-akapulu`](https://github.com/Akapulu/livekit-akapulu) (`uv add` / `pip install`). `AvatarSession` sits on your LiveKit Agents session. You own the LiveKit room (browser + agent + avatar). Guide: https://docs.akapulu.com/guides/calls/livekit.
 
 **Hosted link.** Public page Akapulu Labs hosts. Set avatar, system prompt, This is AI → URL → Start Call. Guide: https://docs.akapulu.com/guides/calls/hosted-links.
 

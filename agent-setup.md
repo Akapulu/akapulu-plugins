@@ -9,7 +9,7 @@ Akapulu Labs builds **live AI avatars** — a talking face (lip-synced video + v
 Two product shapes:
 
 - A **hosted link** — a public page Akapulu Labs hosts. Open the URL, click **Start Call**. No bot to run; the page never sees your API key.
-- Your **own avatar chat** — you run a **voice pipeline** (speech-to-speech, or STT → model → TTS, or anything that produces assistant audio). Akapulu Labs adds the avatar video on top in a Daily room you create and own.
+- Your **own avatar chat** — you run a **voice pipeline** (speech-to-speech, or STT → model → TTS, or anything that produces assistant audio). Akapulu Labs adds the avatar video on top in a WebRTC room you create (Daily with Pipecat, or LiveKit with LiveKit Agents).
 
 Calls use conversation minutes. Pricing: https://akapulu.com/pricing/
 
@@ -75,7 +75,7 @@ Do not continue past this section until they have an account (or confirm they ar
 > **User step.** Ask which they want:
 
 1. **A super-quick link** — talk to an avatar soon, without building a bot.
-2. **Build their own custom avatar chat** — a Pipecat voice pipeline with the Akapulu Labs avatar in their app.
+2. **Build their own custom avatar chat** — a Pipecat (Daily) or LiveKit Agents voice pipeline with the Akapulu Labs avatar in their app.
 
 Wait for the answer. Then follow **only** that branch.
 
@@ -94,7 +94,7 @@ A **hosted link** is a public page Akapulu Labs hosts. You create the row; they 
 
 **Defaults for this path (do not ask):**
 
-- Avatar: **Hollis** — `avatar_id` `1285bfe4-3512-4b34-93ad-196098597a1c`
+- Avatar: **Clara** — `avatar_id` `1f777f64-3758-4a7d-9cbc-c64ae654f7d1`
 - **This is AI** (`show_ai_label`): `false`
 
 > **User step.** Guide them to create an API key at https://akapulu.com/api-keys/. Then instruct them to activate `AKAPULU_API_KEY` in **this** environment (however this project already loads env vars). Do **not** ask them to paste the key into chat.
@@ -113,8 +113,8 @@ Then `POST /api/hosted-links/` with Bearer auth and a JSON body that is exactly:
 
 ```json
 {
-  "label": "Hollis",
-  "avatar_id": "1285bfe4-3512-4b34-93ad-196098597a1c",
+  "label": "Clara",
+  "avatar_id": "1f777f64-3758-4a7d-9cbc-c64ae654f7d1",
   "system_prompt": "<your TTS-friendly prompt>",
   "show_ai_label": false
 }
@@ -136,107 +136,72 @@ If the tour is already finished, they can still create a link under Hosted links
 
 ## Path 2: Build their own custom avatar chat
 
+> **User step.** Ask which stack they use:
+
+1. **Pipecat on Daily** — [`pipecat-akapulu`](https://github.com/Akapulu/pipecat-akapulu), `AkapuluAvatar`, Daily room. Guide: [Pipecat](/guides/calls/pipecat).
+2. **LiveKit Agents** — [`livekit-akapulu`](https://github.com/Akapulu/livekit-akapulu), `AvatarSession`, LiveKit room. Guide: [LiveKit](/guides/calls/livekit).
+
+Wait for the answer. Then follow **only** that branch.
+
+### Names (both stacks)
+
+- **Voice bot** — their voice pipeline. It hears the visitor and produces **assistant audio**. It does not publish the face.
+- **Akapulu Labs worker** — Akapulu Labs’ avatar process. It joins the room and publishes the lip-synced face and the played audio.
+- **Plugin** — on Pipecat, `AkapuluAvatar`; on LiveKit Agents, `AvatarSession`. Runs inside the voice bot / agent session and forwards assistant audio to the worker.
+
+### Path 2a: Pipecat / Daily
+
 Before wiring code, situate **Daily**, the **voice bot**, the **Akapulu Labs worker**, and **`AkapuluAvatar`**.
 
-### Names (use these)
+[Daily](https://www.daily.co/) is the WebRTC room. On this path **they** create that room. `create_akapulu_call` reads `DAILY_API_KEY` and `AKAPULU_API_KEY`, creates the private Daily room, mints the three meeting tokens, and `POST /api/live-sessions/`. Put **`AkapuluAvatar`** after assistant audio with `session_id`. Leave voice-bot audio out and video out off. When the participant named **Avatar** joins, unsubscribe the voice bot from that microphone. The browser stays subscribed. Code: [Pipecat](/guides/calls/pipecat).
 
-- **Voice bot** — their Pipecat process (or other voice pipeline). It hears the visitor and decides what to say. It produces **assistant audio**.
-- **Akapulu Labs worker** — Akapulu Labs’ avatar process. It joins the Daily room and publishes the lip-synced face and the played audio.
-- **`AkapuluAvatar`** — a Pipecat processor from [`pipecat-akapulu`](https://github.com/Akapulu/pipecat-akapulu). It runs **inside the voice bot**, after the assistant audio, and sends that audio to Akapulu Labs so the Akapulu Labs worker can speak it on the face. It is not the worker itself.
-
-### What Daily is (and why it matters here)
-
-[Daily](https://www.daily.co/) is a real-time WebRTC platform: rooms, meeting tokens, and media (audio/video) between participants in a browser or a process.
-
-**Akapulu Labs uses Daily for live calls.** The face and the played audio show up as a participant in a Daily room. On the **plugin / voice-bot** path, **they** create that room (not Akapulu Labs). On a **hosted link**, Akapulu Labs creates the room for them.
-
-What Daily gives them on the plugin path:
-
-- A private room URL everyone joins
-- Separate meeting tokens so the browser, the voice bot, and the Akapulu Labs worker can each join safely
-- The wire that carries the visitor’s mic to the voice bot, and the Akapulu Labs worker’s face + voice back to the visitor
-
-What Akapulu Labs adds on top of that room:
-
-- The **Akapulu Labs worker**, started by the live-session API after they already have `room_url` and `avatar_token`
-- **`AkapuluAvatar` in the voice bot**, which forwards assistant audio to that worker
-
-### Recommended place in a Pipecat (or any) voice pipeline
-
-Their **voice pipeline** can be speech-to-speech, STT → model → TTS, or anything else that produces **assistant audio**. Akapulu Labs does not replace that pipeline. `AkapuluAvatar` sits **after** the audio they want the avatar to speak.
-
-Recommended shape in Pipecat:
-
-1. Build (or keep) the voice pipeline as usual until there are assistant audio frames.
-2. Create the Daily room and three tokens on their server (browser, voice bot, Akapulu Labs worker).
-3. `POST /api/live-sessions/` with `avatar_id`, `show_ai_label`, `room_url`, and `avatar_token` → get `session_id` (this starts the **Akapulu Labs worker**).
-4. Put **`AkapuluAvatar`** in the **voice bot** pipeline **after** that assistant audio, with `session_id`.
-5. Join Daily with the **voice bot** using the voice-bot token; leave voice-bot **audio out** and **video out** off — the **Akapulu Labs worker** publishes the face and the played audio.
-6. Join the browser with the browser token.
-
-If they already have a voice bot: keep their pipeline; add Daily room ownership + live session + `AkapuluAvatar` on the assistant-audio path. Do not invent a second publisher of mic/camera from the voice bot.
-
-Install: `uv add pipecat-akapulu` or `pip install pipecat-akapulu`. The public example already depends on it.
-
-### Path 2 ask: the public example, or their own voice bot?
+Install: `uv add pipecat-akapulu` or `pip install pipecat-akapulu`.
 
 > **User step.** Ask: are you okay using the public example? Behind the scenes it runs **Deepgram Flux**, **OpenAI** (`gpt-5.4-mini`), and **Cartesia Sonic 3.6**.
 
-#### Path 2a: Yes — use the example
+#### Path 2a-i: Yes — use the example
 
-The public example ([akapulu-examples](https://github.com/Akapulu/akapulu-examples)) is a local server, a browser page, and a **voice bot**. Deepgram Flux (`flux-general-multi`) hears the caller. OpenAI `gpt-5.4-mini` speaks, with reasoning off. Cartesia Sonic 3.6 speaks each finished sentence. It creates the Daily room, calls live-sessions (starts the **Akapulu Labs worker**), and runs **`AkapuluAvatar`** inside that voice bot.
+The public example ([akapulu-examples](https://github.com/Akapulu/akapulu-examples)) is a local server, a browser page, and a **voice bot**. It creates the Daily room, calls live-sessions, and runs **`AkapuluAvatar`** inside that voice bot.
 
 > **User step.**
 
-- Create an Akapulu API key at https://akapulu.com/api-keys/ if they do not have one. Instruct them to activate `AKAPULU_API_KEY` in this environment (do not paste the key into chat).
+- Create an Akapulu API key at https://akapulu.com/settings/api-keys/ if they do not have one. Instruct them to activate `AKAPULU_API_KEY` in this environment (do not paste the key into chat).
 - They also need a Daily API key as `DAILY_API_KEY`.
 - They also need `OPENAI_API_KEY`, `DEEPGRAM_API_KEY`, and `CARTESIA_API_KEY`. If one of those is not already in this environment, instruct them to activate it here.
 
-Wait until those env vars are set.
+Wait until those env vars are set. Clone https://github.com/Akapulu/akapulu-examples and follow its README. Run the server, open the local page, start a call.
 
-Then clone https://github.com/Akapulu/akapulu-examples and follow its README. The example already uses Hollis, leaves **This is AI** off, and calls the Akapulu Labs production API. They set `DAILY_API_KEY`, `AKAPULU_API_KEY`, `OPENAI_API_KEY`, `DEEPGRAM_API_KEY`, and `CARTESIA_API_KEY`.
+#### Path 2a-ii: No — bring their own Pipecat pipeline
 
-Run the server, open the local page, start a call. That is their starter app.
+Still clone https://github.com/Akapulu/akapulu-examples as a **reference**. Then guide them through their own Pipecat **voice bot** with **`AkapuluAvatar`**.
 
-#### Path 2b: No — bring their own voice pipeline
+> **User step.** Activate `AKAPULU_API_KEY` and `DAILY_API_KEY` in this environment. Do not paste secrets into chat.
 
-Still clone https://github.com/Akapulu/akapulu-examples as a **reference** (room + tokens + live session + page). Then guide them through their own Pipecat **voice bot** with **`AkapuluAvatar`** inside it (talking to the **Akapulu Labs worker**).
+Three participants in the Daily room they create: browser, voice bot (with `AkapuluAvatar`), Akapulu Labs worker. Lifecycle: `create_akapulu_call` (or manual `POST /api/live-sessions/`), start the voice bot with `session_id`, join the browser. Keep `AKAPULU_API_KEY` on the server.
 
-> **User step.** Activate `AKAPULU_API_KEY` and `DAILY_API_KEY` in this environment the same way as above. Do not paste secrets into chat.
+Details: [How it works](/guides/getting-started/how-akapulu-works), [Pipecat](/guides/calls/pipecat).
 
-##### Call architecture (explain this slowly, with bullets)
+### Path 2b: LiveKit Agents
 
-Remind them of the Daily / `AkapuluAvatar` section above. Then spell out the **three participants** in the room they create:
+Before wiring code, situate **LiveKit**, the **voice agent**, the **Akapulu Labs worker**, and **`AvatarSession`**.
 
-- **Browser** — the person on the call. Joins with a browser meeting token they mint.
-- **Voice bot** — their voice pipeline (Pipecat or otherwise). Joins with a voice-bot meeting token. **Listens** to the browser. Does **not** publish camera or mic. Runs **`AkapuluAvatar`** after assistant audio.
-- **Akapulu Labs worker** — Akapulu Labs’ avatar process. Joins with an avatar meeting token. Publishes the face and the played audio.
+[LiveKit](https://livekit.io/) is the WebRTC room. On this path **they** create that room. `create_akapulu_livekit_call` reads `LIVEKIT_URL`, `LIVEKIT_API_KEY`, `LIVEKIT_API_SECRET`, and `AKAPULU_API_KEY`, creates the room, mints browser and agent tokens, mints the Avatar JWT, and `POST /api/live-sessions/` with `transport=livekit`. Or call `AvatarSession.start` when the agent is already in the room so the plugin mints and POSTs. Await `wait_until_call_ready`. Mute `session.input` until then. Loading status is on LiveKit data topic `akapulu.avatar.status`. Code: [LiveKit](/guides/calls/livekit).
 
-They **own** the Daily room on this path. Akapulu Labs does not create it for them.
+Install: `uv add livekit-akapulu` or `pip install livekit-akapulu`. Requires `livekit-agents` 1.8 or newer.
 
-##### Lifecycle (in order)
+> **User step.** Activate `AKAPULU_API_KEY`, `LIVEKIT_URL`, `LIVEKIT_API_KEY`, and `LIVEKIT_API_SECRET` in this environment. Do not paste secrets into chat. Also set `AKAPULU_API_URL` and `AKAPULU_AVATAR_ID` when `AvatarSession.start` opens the session itself.
 
-1. **Their server creates a Daily room** and mints three meeting tokens (browser, voice bot, Akapulu Labs worker).
-2. **Their server calls** `POST /api/live-sessions/` with Bearer `AKAPULU_API_KEY` and JSON:
-   - `avatar_id` (use Hollis `1285bfe4-3512-4b34-93ad-196098597a1c` unless they pick another from https://akapulu.com/catalog)
-   - `show_ai_label` (boolean)
-   - `room_url` (the Daily room they just created)
-   - `avatar_token` (the meeting token for the **Akapulu Labs worker**)
-3. The response is `session_id`. That **starts the Akapulu Labs worker**; it does not wait for the first frame.
-4. **The voice bot starts**, joins the room with the voice-bot token, and passes `session_id` into **`AkapuluAvatar`** (after the assistant audio in the pipeline).
-5. **The browser joins** with the browser token (usually from their page / server).
-6. When the **voice bot** produces assistant audio, **`AkapuluAvatar`** sends that audio to Akapulu Labs; the **Akapulu Labs worker** publishes lip-synced video + that audio in the room.
+Three participants in the LiveKit room: browser, voice agent (with `AvatarSession`), Akapulu Labs worker (`Avatar`). Keep `AKAPULU_API_KEY` on the server.
 
-Keep `AKAPULU_API_KEY` on the server. The browser never gets it.
-
-Details: [How it works](/guides/getting-started/how-akapulu-works), [Your bot](/guides/calls/your-bot).
+Details: [How it works](/guides/getting-started/how-akapulu-works), [LiveKit](/guides/calls/livekit).
 
 ## 4. After they try it
 
 Send them these docs:
 
 - How a call fits together: https://docs.akapulu.com/guides/getting-started/how-akapulu-works
-- Your bot: https://docs.akapulu.com/guides/calls/your-bot
+- Pipecat: https://docs.akapulu.com/guides/calls/pipecat
+- LiveKit: https://docs.akapulu.com/guides/calls/livekit
 - Hosted links: https://docs.akapulu.com/guides/calls/hosted-links
 - Catalog: https://docs.akapulu.com/guides/avatars/avatar-catalog
 - Verify a recording: https://docs.akapulu.com/guides/video-marks/verify
