@@ -189,7 +189,7 @@ Before wiring code, situate **LiveKit**, the **voice agent**, the **Akapulu Labs
 
 Install: `uv add livekit-akapulu==0.1.1` or `pip install livekit-akapulu==0.1.1`. Requires `livekit-agents` 1.8 or newer.
 
-> **User step.** Activate `AKAPULU_API_KEY`, `LIVEKIT_URL`, `LIVEKIT_API_KEY`, and `LIVEKIT_API_SECRET` in this environment. Do not paste secrets into chat. Also set `AKAPULU_API_URL` and `AKAPULU_AVATAR_ID` when `AvatarSession.start` opens the session itself.
+> **User step.** Activate `AKAPULU_API_KEY`, `LIVEKIT_URL`, `LIVEKIT_API_KEY`, and `LIVEKIT_API_SECRET` in this environment. Do not paste secrets into chat. Also set `AKAPULU_AVATAR_ID` when `AvatarSession.start` opens the session itself.
 
 Three participants in the LiveKit room: browser, voice agent (with `AvatarSession`), Akapulu Labs worker (`Avatar`). Keep `AKAPULU_API_KEY` on the server.
 
