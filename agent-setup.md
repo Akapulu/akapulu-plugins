@@ -187,7 +187,7 @@ Before wiring code, situate **LiveKit**, the **voice agent**, the **Akapulu Labs
 
 [LiveKit](https://livekit.io/) is the WebRTC room. On this path **they** create that room. `create_akapulu_livekit_call` reads `LIVEKIT_URL`, `LIVEKIT_API_KEY`, `LIVEKIT_API_SECRET`, and `AKAPULU_API_KEY`, creates the room, mints browser and agent tokens, mints the Avatar JWT, and `POST /api/live-sessions/` with `transport=livekit`. Or call `AvatarSession.start` when the agent is already in the room so the plugin mints and POSTs. Await `wait_until_call_ready`. Mute `session.input` until then. Loading status is on LiveKit data topic `akapulu.avatar.status`. Code: [LiveKit](/guides/calls/livekit).
 
-Install: `uv add livekit-akapulu==0.1.1` or `pip install livekit-akapulu==0.1.1`. Requires `livekit-agents` 1.8 or newer.
+Install: `uv add livekit-akapulu==0.1.3` or `pip install livekit-akapulu==0.1.3`. Requires `livekit-agents` 1.8 or newer.
 
 > **User step.** Activate `AKAPULU_API_KEY`, `LIVEKIT_URL`, `LIVEKIT_API_KEY`, and `LIVEKIT_API_SECRET` in this environment. Do not paste secrets into chat. Also set `AKAPULU_AVATAR_ID` when `AvatarSession.start` opens the session itself.
 
