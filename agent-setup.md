@@ -155,7 +155,7 @@ Before wiring code, situate **Daily**, the **voice bot**, the **Akapulu Labs wor
 
 [Daily](https://www.daily.co/) is the WebRTC room. On this path **they** create that room. `create_akapulu_call` reads `DAILY_API_KEY` and `AKAPULU_API_KEY`, creates the private Daily room, mints the three meeting tokens, and `POST /api/live-sessions/`. Put **`AkapuluAvatar`** after assistant audio with `session_id`. Leave voice-bot audio out and video out off. When the participant named **Avatar** joins, unsubscribe the voice bot from that microphone. The browser stays subscribed. Code: [Pipecat](/guides/calls/pipecat).
 
-Install: `uv add pipecat-akapulu==0.1.17` or `pip install pipecat-akapulu==0.1.17`.
+Install: `uv add pipecat-akapulu==0.1.22` or `pip install pipecat-akapulu==0.1.22`.
 
 > **User step.** Ask: are you okay using the public example? Behind the scenes it runs **Deepgram Flux**, **OpenAI** (`gpt-5.4-mini`), and **Cartesia Sonic 3.6**.
 
